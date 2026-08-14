@@ -1,28 +1,30 @@
 /**
  * dsh-tool-backtest
  *
- * Strategy backtesting engine. Agent defines a strategy as buy/sell rules,
- * the engine runs it against historical K-line data and returns performance metrics.
+ * Strategy backtesting engine. The agent defines a strategy as buy/sell
+ * signals, and the engine runs it against historical K-line data to produce
+ * performance metrics.
  */
 
 import type { Context } from '@deepseek-ai/cordis'
-import { backtestTool } from './tools/backtest.ts'
-import { indicatorTool } from './tools/indicators.ts'
+import z from '@deepseek-ai/schemastery'
+import { backtestTool } from './tools/backtest.js'
+import { indicatorTool } from './tools/indicators.js'
+
+export { runBacktest } from './engine.js'
+export type { Bar, Signal, Trade, BacktestResult } from './engine.js'
+export type { ResolvedConfig } from './config.js'
 
 export const name = 'tool-backtest'
 export const inject = ['tools']
 
-export interface Config {
-  defaultCapital?: number
-  defaultCommission?: number
-}
+export const Config = z.object({
+  defaultCapital: z.number().default(100000),
+  defaultCommission: z.number().default(0.001),
+})
 
-export function apply(ctx: Context, config: Config) {
-  const tools = [
-    backtestTool(config),
-    indicatorTool(),
-  ]
-  for (const tool of tools) {
-    ctx.tools.register(tool as any)
+export function apply(ctx: Context, config: { defaultCapital: number; defaultCommission: number }) {
+  for (const tool of [backtestTool(config), indicatorTool()]) {
+    ctx.tools.register(tool)
   }
 }

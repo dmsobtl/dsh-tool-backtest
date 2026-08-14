@@ -41,12 +41,13 @@ export interface BacktestResult {
   winRate: number
   totalTrades: number
   avgHoldingDays: number
-  profitFactor: number
+  profitFactor: number | null
   trades: Trade[]
   equityCurve: Array<{ date: string; equity: number }>
 }
 
 export function runBacktest(
+  strategy: string,
   bars: Bar[],
   signals: Signal[],
   initialCapital: number,
@@ -123,7 +124,7 @@ export function runBacktest(
   const sharpeRatio = stdReturn > 0 ? (avgReturn / stdReturn) * Math.sqrt(252) : 0
 
   return {
-    strategy: '',
+    strategy,
     period: bars.length > 0 ? `${bars[0].date} ~ ${bars[bars.length - 1].date}` : 'N/A',
     initialCapital,
     finalCapital: Math.round(finalEquity * 100) / 100,
@@ -135,7 +136,7 @@ export function runBacktest(
     winRate: trades.length > 0 ? Math.round((winningTrades.length / trades.length) * 10000) / 100 : 0,
     totalTrades: trades.length,
     avgHoldingDays: trades.length > 0 ? Math.round(trades.reduce((s, t) => s + t.holdingDays, 0) / trades.length) : 0,
-    profitFactor: grossLoss > 0 ? Math.round((grossProfit / grossLoss) * 100) / 100 : grossProfit > 0 ? Infinity : 0,
+    profitFactor: grossLoss > 0 ? Math.round((grossProfit / grossLoss) * 100) / 100 : grossProfit > 0 ? null : 0,
     trades,
     equityCurve: equityCurve.filter((_, i) => i % Math.max(1, Math.floor(equityCurve.length / 50)) === 0),
   }

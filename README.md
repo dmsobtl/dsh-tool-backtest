@@ -18,11 +18,12 @@ dsh plugin add dsh-tool-backtest
 ## 配置
 
 ```yaml
-- id: backtest
-  plugin: dsh-tool-backtest
-  config:
-    defaultCapital: 100000    # 默认初始资金
-    defaultCommission: 0.001  # 默认手续费率 0.1%
+- insert:
+    - id: backtest
+      name: dsh-tool-backtest
+      config:
+        defaultCapital: 100000    # 默认初始资金
+        defaultCommission: 0.001  # 默认手续费率 0.1%
 ```
 
 ## 使用流程
