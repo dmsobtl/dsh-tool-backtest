@@ -1,5 +1,7 @@
 # dsh-tool-backtest
 
+> 兼容 dsh 0.2.1-rc.x（@deepseek-ai/cordis ~4.0.5、@deepseek-ai/dsh-tools ~0.2.1-rc.2）。v0.1.1 起 content block 为扁平结构、工具结果为 role:'tool' 消息。
+
 DSH 插件：策略回测引擎 — 定义买卖信号，跑历史数据，输出绩效指标。
 
 ## 工具清单
